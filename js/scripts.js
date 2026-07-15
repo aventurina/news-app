@@ -1,3 +1,5 @@
+import { debounce, buildCacheKey, formatRelativeTime } from "./utils.js";
+
 const PAGE_SIZE = 9;
 const SEARCH_DEBOUNCE_MS = 350;
 
@@ -21,34 +23,6 @@ const resultsMeta = document.getElementById("results-meta");
 const prevBtn = document.getElementById("prev-btn");
 const nextBtn = document.getElementById("next-btn");
 const pageIndicator = document.getElementById("page-indicator");
-
-function debounce(fn, wait) {
-    let timer;
-    return (...args) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => fn(...args), wait);
-    };
-}
-
-function cacheKey(query, category, page) {
-    return `${query}::${category}::${page}`;
-}
-
-function formatRelativeTime(isoString) {
-    if (!isoString) return "";
-
-    const diffMs = new Date(isoString).getTime() - Date.now();
-    const diffMinutes = Math.round(diffMs / 60000);
-    const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
-
-    if (Math.abs(diffMinutes) < 60) return rtf.format(diffMinutes, "minute");
-
-    const diffHours = Math.round(diffMinutes / 60);
-    if (Math.abs(diffHours) < 24) return rtf.format(diffHours, "hour");
-
-    const diffDays = Math.round(diffHours / 24);
-    return rtf.format(diffDays, "day");
-}
 
 function renderSkeleton(count = PAGE_SIZE) {
     newsContainer.innerHTML = Array.from({ length: count })
@@ -127,7 +101,7 @@ function displayNews(articles) {
 
 async function fetchNews() {
     const { query, category, page } = state;
-    const key = cacheKey(query, category, page);
+    const key = buildCacheKey(query, category, page);
 
     if (activeController) {
         activeController.abort();

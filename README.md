@@ -2,6 +2,8 @@
 
 A real-time news dashboard built with vanilla JavaScript, a small Express API proxy, and the [NewsAPI](https://newsapi.org/) top-headlines endpoint. Live search, category filtering, and paginated results with a custom dark UI — no frontend framework, no component library.
 
+![News // Terminal screenshot](docs/screenshot-news-app.png)
+
 ## Features
 
 - Live headlines pulled from NewsAPI on load
@@ -49,6 +51,14 @@ npm start
 
 This opens the app at `http://localhost:1234`, with `/api/*` requests proxied to the Express server on port `4002`.
 
+## Testing
+
+Backend routes (`/api/news`, `/api/health`) are tested with Node's built-in test runner and `supertest`, mocking the upstream NewsAPI call so tests run offline and never burn real API quota. Pure frontend logic (`debounce`, cache-key building, relative-time formatting) is extracted into `js/utils.js` and unit-tested the same way, including simulated timers for the debounce behavior.
+
+```bash
+npm test
+```
+
 ## Deployment
 
 In production, run `npm run build` to generate `dist/`, then start the server with `npm run server` (or `node server/index.js`) — Express serves the built frontend and the `/api/news` proxy from the same origin and the same port, so there's no CORS configuration and no separate frontend host to stand up. Set `NEWS_API_KEY` and (optionally) `PORT` as environment variables on whatever platform hosts it.
@@ -56,9 +66,12 @@ In production, run `npm run build` to generate `dist/`, then start the server wi
 ## Project structure
 
 ```
-index.html         Markup and layout
-css/style.css       Custom dark theme (variables, grid background, cards, skeletons)
-js/scripts.js       Fetch logic, caching, cancellation, search/filter/pagination, rendering
-server/index.js     Express proxy: calls NewsAPI server-side, caches responses, serves the build
-package.json        Scripts and dependencies for both frontend and backend
+index.html            Markup and layout
+css/style.css          Custom dark theme (variables, grid background, cards, skeletons)
+js/scripts.js          DOM wiring, fetch orchestration, search/filter/pagination, rendering
+js/utils.js            Pure helpers (debounce, cache-key building, relative-time formatting)
+js/utils.test.js       Unit tests for js/utils.js
+server/index.js        Express proxy: calls NewsAPI server-side, caches responses, serves the build
+server/index.test.js   Route tests for the Express proxy (mocked upstream)
+package.json           Scripts and dependencies for both frontend and backend
 ```
