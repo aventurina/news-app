@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: news-app
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run server
+    envVars:
+      - key: NEWS_API_KEY
+        sync: false

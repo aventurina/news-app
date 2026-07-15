@@ -3,11 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple News App</title>
+    <meta name="description" content="A real-time news dashboard with live search, category filtering, and cached pagination, built on the NewsAPI top-headlines feed.">
+    <title>News // Terminal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Top Headlines</h1>
-    <div id="news"></div>
-    <script src="scripts.js" type="module"></script>
+    <div class="bg-grid" aria-hidden="true"></div>
+
+    <header class="site-header">
+        <div class="shell header-inner">
+            <div class="brand">
+                <span class="brand-mark">&lt;/&gt;</span>
+                <span class="brand-name">NEWS<span class="brand-accent">://</span>TERMINAL</span>
+            </div>
+            <p class="brand-tagline">live headlines &middot; real-time query engine</p>
+        </div>
+    </header>
+
+    <main class="shell">
+        <section class="panel search-panel" aria-label="Search and filter controls">
+            <div class="search-row">
+                <div class="search-field">
+                    <input type="text" id="search-input" class="search-input" placeholder="query headlines..." autocomplete="off" spellcheck="false">
+                    <span class="kbd-hint">&#9166;</span>
+                </div>
+                <button id="search-btn" class="btn btn-primary">
+                    Search
+                </button>
+            </div>
+
+            <div class="chip-row" id="category-chips" role="group" aria-label="Filter by category">
+                <button class="chip is-active" data-category="" type="button">All</button>
+                <button class="chip" data-category="business" type="button">Business</button>
+                <button class="chip" data-category="entertainment" type="button">Entertainment</button>
+                <button class="chip" data-category="health" type="button">Health</button>
+                <button class="chip" data-category="science" type="button">Science</button>
+                <button class="chip" data-category="sports" type="button">Sports</button>
+                <button class="chip" data-category="technology" type="button">Technology</button>
+            </div>
+        </section>
+
+        <div class="results-meta" id="results-meta" aria-live="polite"></div>
+
+        <section id="news-container" class="news-grid" aria-live="polite"></section>
+
+        <nav class="pagination" aria-label="Pagination">
+            <button id="prev-btn" class="btn btn-ghost" type="button">
+                <span aria-hidden="true">&larr;</span> Prev
+            </button>
+            <span id="page-indicator" class="page-indicator">Page 1</span>
+            <button id="next-btn" class="btn btn-ghost" type="button">
+                Next <span aria-hidden="true">&rarr;</span>
+            </button>
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <div class="shell">
+            <p>Built by Aimee Venturina &middot; data via <a href="https://newsapi.org" target="_blank" rel="noopener noreferrer">NewsAPI</a></p>
+        </div>
+    </footer>
+
+    <script src="js/scripts.js" type="module"></script>
 </body>
 </html>
